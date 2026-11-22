@@ -10,13 +10,27 @@
 // The two runs the grader does must write the same bytes: this program only
 // copies files and builds the dossier from them, so it is deterministic.
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+
+// Pre-flight: fail fast with a plain message when a file would break the
+// gate's own limits, instead of handing the scorer a refused entry.
+const indexPath = join(here, 'game', 'index.html');
+if (!existsSync(indexPath)) throw new Error('game/index.html is missing');
+if (statSync(indexPath).size > 1048576) throw new Error('game/index.html is over the 1 MiB gate cap');
+const shotsDir = join(here, 'screenshots');
+if (existsSync(shotsDir)) {
+  const shots = readdirSync(shotsDir).filter((name) => !name.startsWith('.'));
+  if (shots.length > 4) throw new Error('screenshots/ holds ' + shots.length + ' images; the gate allows 4');
+  for (const name of shots) {
+    if (statSync(join(shotsDir, name)).size > 262144) throw new Error('screenshots/' + name + ' is over the 256 KiB gate cap');
+  }
+}
 
 mkdirSync(out, { recursive: true });
 cpSync(join(here, 'game'), join(out, 'game'), { recursive: true });

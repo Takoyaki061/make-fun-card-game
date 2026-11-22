@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palisade — a lantern-duel card game</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/table.css">
+</head>
+<body>
+<div id="table">
+  <header id="topbar">
+    <div class="brand"><span class="brand-glyph">✦</span> PALISADE</div>
+    <div class="round" id="round-label">Round 1 / 5</div>
+    <div class="scores">
+      <span class="score you">YOU <b id="score-you">0</b> 🏮</span>
+      <span class="score-sep">—</span>
+      <span class="score rival"><b id="score-rival">0</b> 🏮 WARDEN</span>
+    </div>
+    <div class="shifts">
+      <span id="shift-you">Shift ready</span>
+      <span id="shift-rival">Shift ready</span>
+    </div>
+    <button id="shift-btn" type="button" title="Retint one of your top cards (once per match)">⇄ Shift</button>
+  </header>
+
+  <section id="rival-zone">
+    <div id="rival-hand"></div>
+    <div id="intent-box" class="hidden"></div>
+  </section>
+
+  <main id="lanes"></main>
+
+  <div id="legend">
+    <span><b class="lg-rust">▲ Rust</b></span>
+    <span><b class="lg-ash">■ Ash</b></span>
+    <span><b class="lg-verd">● Verd</b></span>
+    <span><b class="lg-ember">★ Ember wild</b></span>
+    <span class="lg-rule">Same tint beneath = anchored — needs +2 pips to beat</span>
+    <span class="lg-rule">Shift: 1 per match</span>
+    <span class="lg-rule">Lane pays stake × top pip 🏮</span>
+  </div>
+
+  <section id="player-zone">
+    <div id="player-hand"></div>
+  </section>
+
+  <footer id="logbar"><span id="log"></span></footer>
+</div>
+
+<div id="title-screen" class="overlay">
+  <div class="panel title-panel">
+    <div class="title-glyph">✦</div>
+    <h1>PALISADE</h1>
+    <p class="tagline">A lantern duel of pips, tints and nerve — you against Warden Ash.</p>
+    <ol class="howto">
+      <li><b>Place one card a round</b> into Hearth (×1), Market (×2) or Spire (×3). Five rounds, six cards — one stays in your hand.</li>
+      <li><b>Higher pip takes the lane.</b> Match the tint below your card to <b>anchor</b> it — an anchored card needs 2 more pips to beat.</li>
+      <li><b>Ember ★ is wild:</b> it anchors with any tint. Your one <b>Shift</b> retints a placed card.</li>
+      <li>At the end, each lane pays <b>stake × top pip</b> in lanterns 🏮. Most lanterns wins.</li>
+    </ol>
+    <p class="hint">Tints are colour <i>and</i> shape: Rust ▲ orange, Ash ■ blue, Verd ● green, Ember ★ gold.<br>
+    Click a card, then a lane. Keys 1–6 pick a card, Esc cancels.</p>
+    <button id="play-btn" type="button">▶ &nbsp;Play the match</button>
+  </div>
+</div>
+
+<div id="end-screen" class="overlay hidden">
+  <div class="panel end-panel">
+    <div id="ember-layer"></div>
+    <h1 id="end-title">YOU WIN THE PALISADE</h1>
+    <p id="end-score" class="end-score">0 🏮 — 0 🏮</p>
+    <ul id="end-breakdown"></ul>
+    <button id="again-btn" type="button">↻ &nbsp;Play again</button>
+  </div>
+</div>
+
+<script type="module">
+import { boot } from './js/main.js';
+import { applyShotParam } from './js/shots.js';
+boot();
+applyShotParam();
+</script>
+</body>
+</html>
